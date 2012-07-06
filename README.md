@@ -3,25 +3,24 @@ Shorty
 
 **Shorty** is a **jQuery _plugin_** that allows for painless shortcut key binding.
 
-What does it do?
+What can it do?
 -----------
 
-* Lets you bind *meaningful* routines to common shortcut combinations.
-* Permits familiar shortcut phrases like "Ctrl+N" and "Alt+E"
-* Possesses a framework that could make all sorts of categories of things to load possible.
-* Unwaveringly forces massive crowds to idolize you.
+* Bind *meaningful* routines to key combinations (familiar phrases like `Ctrl+N` and `Alt+E`).
+* Help create seamless web applications.
+* Make people go, **"WHOA."**
 
 How to use it
 -----------
 
-Before doing anything, you must include **jQuery** and **jquery.Shorty.js** (or the minified version, **jquery.Shorty.min.js**) on your page like so
+Include **jQuery** and **jquery.shorty.js** (or the minified version, **jquery.shorty.min.js**) on your page like so
 
 ```javascript
 <script language="javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
-<script language="javascript" src="jquery.Shorty.js" type="text/javascript"></script>
+<script language="javascript" src="jquery.shorty.js" type="text/javascript"></script>
 ```
 
-Finally, _that's_ over; we can move right on to the other stuff.
+Come on; we ain't got all day, *son*.  Here we go.
 
 Examples
 -----------
@@ -29,67 +28,37 @@ Examples
 The structure of using Shorty goes like this:
 
 ```javascript
-$.yql( {
+$(window).shorty( {
 	
-	format: "json",
-	
-	key: KEY,
-	
-	query: "select * from yahoo.finance.quotes where symbol in ('AAPL', 'GOOG', 'MSFT')",
-	
-	secret: SECRET,
-	
-	success: function(data) {
+	action: function(event) {
 		
-		console.debug(data);
+		alert('Trying to leave, eh?');
 		
-	}
-	
-} );
-```
-
-**NOTE:** `query` is the only required property.  That makes `key`, `format` (assumed `"json"`), and `secret` not so (neither is `success` but... _wtf_).
-
-The previous code loads some stock information and logs it to the console. ```query``` is, of course, the query to run,
-```success``` is the callback function, ```format``` is the type in which the data should be returned (`"json"`, `"text"`, `"xml"`, ...), ```key``` and
-```secret``` have to do with if you register an official application, and success is as mentioned before.  The argument
-passed to the success function is the data which has been loaded.  There's also a built-in function called ```getHTML```
-which goes a little something like this:
-
-```javascript
-$.yql( "getHTML" , {
-	
-	format: "text",
-	
-	success: function(data) {
+		console.log(event);
 		
-		$("body").html(data);
+		return false;
 		
 	},
 	
-	url: "http://www.google.com"
+	event: "keypress",
+	
+	shortcut: "Ctrl+Q Ctrl+W"
 	
 } );
 ```
 
-Wuddyaknow?  You just loaded Google's homepage into your body tag.  Check out the repository for an example of this in action!
+**NOTE:** `shortcut` is the only required property.  That makes `action` and `event` not so, although modifying `action` is
+conventional.  Also, by having `return false` in your `action` function, the default browser action will be prevented (Chrome/Safari
+may cause issues).
 
-You can perfrom really fun requests in a snap with _zero_ filler by doing something like this:
-
-```javascript
-var a;$.yql({async: false,query:"select * from yahoo.finance.quotes where symbol in ('MSFT')",success:function(data){a=data;}})
-```
-
-**Bam**.  You just got the most recent stock information for **Microsoft** and stored it in `a`.  _<span style="font-variant: small-caps;">How do you feel now</span>?_
+The previous code logs the event object passed to the `action` function to the console after employing a flashy alert window ;).
+You could virtually achieve the same thing shorthandedly by doing this:
 
 ```javascript
-
-if ( parseFloat(a.query.results.quote.LastTradePriceOnly) < 5 )
-	alert("OMG, buy some Microsoft stock.  It's cheap as hell right now.");
-
+$(window).shorty("Ctrl+Q Ctrl+W", function(event) { alert('Please stay!!'); return false; } );
 ```
 
-Fun, right?
+Well, well.  Looks like we don't need objects after all!
 
 Browser support
 -----------
