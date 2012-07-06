@@ -1,5 +1,6 @@
 /*!
- *	Shorty v1.0.1a - UNDER HEAVY DEVELOPMENT WITH LOTS OF EXPERIMENTAL DEVELOPMENTS INSIDE COMMENTS.
+ *	Shorty v1.0.2a
+ *	UNDER HEAVY DEVELOPMENT WITH LOTS OF EXPERIMENTAL DEVELOPMENTS INSIDE COMMENTS.
  *	
  *	A shortcut key binding assistant.
  *	
@@ -156,8 +157,7 @@
 			event: "keypress",			// If for some reason necessary, changes the event to which this shortcut is bound.
 			//preventDefault: true,		// NEEDS WORK: Makes the default action for the browser not occur.
 			//sensitive: false,			// NEEDS WORK: Makes shortcut strings case-sensitive or not.
-			shortcut: "ctrl+e"			// Default shortcut string (Ctrl + E is virtually useless).
-										// IMPORTANT: Specify modifiers in alphabetical order (alt+shift+p).
+			shortcut: ""				// Shortcut string (like "ctrl+n").  IMPORTANT: Specify modifiers in alphabetical order (alt+shift+p).
 			
 		}, oParams);
 		
@@ -189,10 +189,17 @@
 		//	return methods[method].apply( this, Array.prototype.slice.call(arguments, 1) );
 		//else if ( typeof method === 'string' && typeof arguments[1] == 'function' )
 		//	$(window).bind(this.oSettings.event, this.oSettings.shortcut, this.oSettings.action);
-		/*else */if (typeof oParams === 'object' || !oParams)
+		/*else */if (typeof oParams === 'object')
 			return jQuery(this).bind(this.oSettings.event, this.oSettings.shortcut, this.oSettings.action);
-		else
-			$.error(jQuery.shorty.name + ' does not have a ' + method + ' method.');
+		else if (typeof oParams === 'string') {
+			
+			if ( typeof arguments[1] == 'function' )
+				this.oSettings.action = arguments[1];
+			
+			return jQuery(this).bind(this.oSettings.event, oParams, this.oSettings.action);
+			
+		} else if (!oParams || oSettings.shortcut == "")
+			$.error(jQuery.shorty.name + ' requires at least a shortcut to be passed to it (inside an object or as its first argument).');
 		
 	};
 
