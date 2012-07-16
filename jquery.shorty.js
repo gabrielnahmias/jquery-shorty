@@ -14,6 +14,9 @@
  *	TODO:	Make $().shorty() have case-insensitivity option.
  *			Make a shortcut to Shorty where you just go $.shorty().
  *			Make a list of shortucts possible like shift+t,shift+o,alt+i.
+ *			Make Macs work with the alt key.
+ *
+ *	KNOWN ISSUES:	Escape key tends to fudge up with the keypress event.  Use keydown for now.
  *			
  */
 
@@ -36,18 +39,17 @@
 		
 			oHandle.handler = function(event) {
 				
+				var iKey = event.keyCode ? event.keyCode : event.which;
+				
 				// Don't fire in text-accepting inputs to which we didn't directly bind.
 				
-				if ( this !== event.target && (/textarea|select/i.test( event.target.nodeName ) || event.target.type === "text") ) {
-					
+				if ( this !== event.target && (/textarea|select/i.test( event.target.nodeName ) || event.target.type === "text") )
 					return;
 					
-				}
-				
 				// Keypress represents characters, not special keys.
 				
-				var special = event.type !== "keypress" && jQuery.shorty.keyMap[ event.which ],
-					character = String.fromCharCode( event.which ).toLowerCase(),
+				var special = event.type !== "keypress" && jQuery.shorty.keyMap[iKey],
+					character = String.fromCharCode(iKey).toLowerCase(),
 					key, modif = "", possible = {};
 	
 				// Check combinations (alt/ctrl/shift + anything).
@@ -95,7 +97,7 @@
 			
 		}
 		
-	}
+	};
 	
 	// Let 'er rip.
 	
@@ -106,6 +108,13 @@
 	} );
 	
 	// TODO:	Try and make this some kind of configuration thing then make $.shorty AND $(...).shorty possible.
+	
+	var iAlt;
+	
+	if ( navigator.appVersion.indexOf("Mac")!=-1 )
+		iAlt = 1;
+	else
+		iAlt = 18;
 	
 	jQuery.shorty = {
 		
@@ -146,7 +155,7 @@
 				// To access the individual key pressed when working with the keypress event (default), you must adjust to using
 				// event.originalEvent.charCode inside your action instead of merely event.keyCode. To make this value uniform, use
 				// something like String.fromCharCode(event.originalEvent.charCode).toUpperCase() (case-sensitivity has not yet been
-				// facilitated).  event.keyCode is pretty straightforward.  You can also access the full keycode by 
+				// facilitated).  event.keyCode is pretty straightforward.
 				
 				// When using keydown or keyup, the key is in event.keyCode.
 				
